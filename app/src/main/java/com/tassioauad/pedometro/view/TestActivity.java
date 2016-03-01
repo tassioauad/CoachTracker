@@ -29,6 +29,8 @@ public class TestActivity extends AppCompatActivity {
         if(permissionCheck != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        } else {
+            startLocationCapturer();
         }
 
         textviewLocation = (TextView) findViewById(R.id.textview_location);
@@ -39,23 +41,27 @@ public class TestActivity extends AppCompatActivity {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    LocationCapturerImpl locationCapturerImpl = new LocationCapturerImpl(this);
-                    locationCapturerImpl.setLocationCapturerListener(new LocationCapturerListener() {
-
-                        @Override
-                        public void connectionFailed(String errorMessage) {
-                            textviewLocation.setText(errorMessage);
-                        }
-
-                        @Override
-                        public void onLocationCaptured(double latitude, double longitude) {
-                            textviewLocation.setText(latitude + " " + longitude);
-
-                        }
-                    });
-                    locationCapturerImpl.startToCaptureLocations();
+                    startLocationCapturer();
                 }
             }
         }
+    }
+
+    private void startLocationCapturer() {
+        LocationCapturerImpl locationCapturerImpl = new LocationCapturerImpl(this);
+        locationCapturerImpl.setLocationCapturerListener(new LocationCapturerListener() {
+
+            @Override
+            public void connectionFailed(String errorMessage) {
+                textviewLocation.setText(errorMessage);
+            }
+
+            @Override
+            public void onLocationCaptured(double latitude, double longitude) {
+                textviewLocation.setText(latitude + " " + longitude);
+
+            }
+        });
+        locationCapturerImpl.startToCaptureLocations();
     }
 }
