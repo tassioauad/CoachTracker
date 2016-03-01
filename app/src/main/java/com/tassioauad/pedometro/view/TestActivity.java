@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.tassioauad.pedometro.R;
 import com.tassioauad.pedometro.model.api.LocationManager;
 
-public class TestActivitiy extends AppCompatActivity {
+public class TestActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private TextView textviewLocation;
