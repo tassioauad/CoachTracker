@@ -43,8 +43,13 @@ public class TestActivity extends AppCompatActivity {
                         public void onLocationCaptured(Location location) {
                             textviewLocation.setText(location.getLatitude() + " " + location.getLongitude());
                         }
+
+                        @Override
+                        public void connectionFailed(String errorMessage) {
+                            textviewLocation.setText(errorMessage);
+                        }
                     });
-                    locationManager.startToCapture();
+                    locationManager.startToCaptureLocations();
                 }
             }
         }
