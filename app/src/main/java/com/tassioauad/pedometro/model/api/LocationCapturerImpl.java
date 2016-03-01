@@ -10,13 +10,12 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 
-public class LocationManager implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+public class LocationCapturerImpl implements LocationCapturer, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private GoogleApiClient googleApiClient;
-    private LocationManagerListener locationManagerListener;
+    private LocationCapturerListener locationCapturerListener;
 
-    public LocationManager(Context context, LocationManagerListener locationManagerListener) {
-        this.locationManagerListener = locationManagerListener;
+    public LocationCapturerImpl(Context context) {
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -24,11 +23,18 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
                 .build();
     }
 
+    @Override
     public void startToCaptureLocations() {
         //Trying to connect with Google API. If it works onConnected() will be called, else onConnectionFailed() will be called.
         googleApiClient.connect();
     }
 
+    @Override
+    public void setLocationCapturerListener(LocationCapturerListener locationCapturerListener) {
+        this.locationCapturerListener = locationCapturerListener;
+    }
+
+    @Override
     public void stopToCaptureLocations() {
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this); //Stopping to get location updates
         googleApiClient.disconnect(); //Closing connection with Google APIs
@@ -36,12 +42,13 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
 
     /**
      * Called when there was an error connecting the client to the service.
+     *
      * @param connectionResult
      */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         //Google API connection has been failed! Stop it and warn!
-        locationManagerListener.connectionFailed(connectionResult.getErrorMessage());
+        locationCapturerListener.connectionFailed(connectionResult.getErrorMessage());
         stopToCaptureLocations();
     }
 
@@ -49,6 +56,7 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
      * After calling connect(), this method will be invoked asynchronously when the connect request has successfully completed.
      * After this callback, the application can make requests on other methods provided by the client and expect that no user intervention
      * is required to call methods that use account and scopes provided to the client constructor.
+     *
      * @param bundle
      */
     @Override
@@ -73,19 +81,16 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
         //Wait for the GoogleApiClient restores the connection.
     }
 
-
     /**
      * Called when the location has changed.
+     *
      * @param location
      */
     @Override
     public void onLocationChanged(Location location) {
         //Current location has been catch, warn it!
-        locationManagerListener.onLocationCaptured(location);
+        locationCapturerListener.onLocationCaptured(location.getLatitude(), location.getLongitude());
     }
 
-    public interface LocationManagerListener {
-        void onLocationCaptured(Location location);
-        void connectionFailed(String errorMessage);
-    }
+
 }
