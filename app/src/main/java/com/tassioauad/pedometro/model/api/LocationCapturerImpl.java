@@ -12,11 +12,11 @@ import com.google.android.gms.location.LocationServices;
 
 public class LocationCapturerImpl implements LocationCapturer, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
-    private GoogleApiClient googleApiClient;
-    private LocationCapturerListener locationCapturerListener;
     private static final long LOCATION_CAPTURING_INTERVAL_INMILIS = 10000;
     private static final long LOCATION_CAPTURING_FASTESTINTERVAL_INMILIS = 5000;
     private static final long LOCATION_CAPTURING_SMALESTDISPLACEMENT_INMETERS = 100;
+    private GoogleApiClient googleApiClient;
+    private LocationCapturerListener locationCapturerListener;
 
     public LocationCapturerImpl(Context context) {
         googleApiClient = new GoogleApiClient.Builder(context)

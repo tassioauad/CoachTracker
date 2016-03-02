@@ -9,8 +9,6 @@ import android.os.Handler;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.tassioauad.pedometro.model.entity.ActivityType;
@@ -36,6 +34,7 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
         //Trying to connect with Google API. If it works onConnected() will be called, else onConnectionFailed() will be called.
         googleApiClient.connect();
     }
+
     /**
      * Called when there was an error connecting the client to the service.
      *
@@ -54,7 +53,7 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
                 googleApiClient,
                 PendingIntent.getService(context, 0,
                         new Intent(context, ActivityRecognitionIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT)
-        ); //Stopping to get location updates
+        ); //Stopping to recognize activities.
         googleApiClient.disconnect(); //Closing connection with Google APIs
     }
 
@@ -103,7 +102,7 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
          */
         @Override
         protected void onHandleIntent(final Intent intent) {
-            if(ActivityRecognitionResult.hasResult(intent)) {
+            if (ActivityRecognitionResult.hasResult(intent)) {
                 new Handler(getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {

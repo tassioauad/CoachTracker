@@ -11,7 +11,7 @@ public enum ActivityType {
     }
 
     public String getName() {
-        switch(value) {
+        switch (value) {
             case 0:
                 return "In Vehicle";
             case 1:
