@@ -12,6 +12,9 @@ import com.google.android.gms.location.LocationServices;
 
 public class LocationCapturerImpl implements LocationCapturer, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
+    private static final long LOCATION_CAPTURING_INTERVAL_INMILIS = 10000;
+    private static final long LOCATION_CAPTURING_FASTESTINTERVAL_INMILIS = 5000;
+    private static final long LOCATION_CAPTURING_SMALESTDISPLACEMENT_INMETERS = 100;
     private GoogleApiClient googleApiClient;
     private LocationCapturerListener locationCapturerListener;
 
@@ -63,8 +66,9 @@ public class LocationCapturerImpl implements LocationCapturer, GoogleApiClient.C
     public void onConnected(Bundle bundle) {
         //Google API connection has been done successfully, now we can
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
+        locationRequest.setInterval(LOCATION_CAPTURING_INTERVAL_INMILIS);
+        locationRequest.setFastestInterval(LOCATION_CAPTURING_FASTESTINTERVAL_INMILIS);
+        locationRequest.setSmallestDisplacement(LOCATION_CAPTURING_SMALESTDISPLACEMENT_INMETERS);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
@@ -89,7 +93,7 @@ public class LocationCapturerImpl implements LocationCapturer, GoogleApiClient.C
     @Override
     public void onLocationChanged(Location location) {
         //Current location has been catch, warn it!
-        locationCapturerListener.onLocationCaptured(location.getLatitude(), location.getLongitude());
+        locationCapturerListener.onLocationCaptured(new com.tassioauad.pedometro.model.entity.Location(location));
     }
 
 
