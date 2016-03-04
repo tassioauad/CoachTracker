@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">pedometro</string>
+    <!-- General -->
+    <string name="app_name">Pedometro</string>
+
+    <!--HomeActivity -->
+    <string name="homeactivity_latitudelongitude">latitude: %1$f longitude: %2$f</string>
+
 </resources>
