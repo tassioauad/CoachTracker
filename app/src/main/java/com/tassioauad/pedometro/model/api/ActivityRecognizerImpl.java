@@ -87,6 +87,7 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
         //Wait for the GoogleApiClient restores the connection.
     }
 
+    @Override
     public void setActivityRecognizerListener(ActivityRecognizerListener activityRecognizerListener) {
         this.activityRecognizerListener = activityRecognizerListener;
     }
