@@ -20,6 +20,8 @@ import com.tassioauad.pedometro.model.entity.Location;
 public class TestActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private LocationCapturerImpl locationCapturerImpl;
+    private ActivityRecognizerImpl activityRecognizer;
     private TextView textviewLocation;
     private TextView textviewActivity;
 
@@ -44,6 +46,13 @@ public class TestActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        activityRecognizer.stopToRecognizeActivities();
+        locationCapturerImpl.stopToCaptureLocations();
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
@@ -55,7 +64,7 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void startToCaptureLocation() {
-        LocationCapturerImpl locationCapturerImpl = new LocationCapturerImpl(this);
+        locationCapturerImpl = new LocationCapturerImpl(this);
         locationCapturerImpl.setLocationCapturerListener(new LocationCapturerListener() {
 
             @Override
@@ -73,7 +82,7 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void startToRecognizeActivity() {
-        ActivityRecognizerImpl activityRecognizer = new ActivityRecognizerImpl(this);
+        activityRecognizer = new ActivityRecognizerImpl(this);
         activityRecognizer.setActivityRecognizerListener(new ActivityRecognizerListener() {
             @Override
             public void connectionFailed(String errorMessage) {
