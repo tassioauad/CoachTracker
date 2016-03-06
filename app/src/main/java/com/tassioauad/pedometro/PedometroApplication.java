@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.tassioauad.pedometro.dagger.ApiModule;
 import com.tassioauad.pedometro.dagger.AppModule;
+import com.tassioauad.pedometro.dagger.DaoModule;
 
 import dagger.ObjectGraph;
 
@@ -18,7 +19,8 @@ public class PedometroApplication extends Application {
         objectGraph = ObjectGraph.create(
                 new Object[]{
                         new AppModule(PedometroApplication.this),
-                        new ApiModule()
+                        new ApiModule(),
+                        new DaoModule()
                 }
         );
     }
