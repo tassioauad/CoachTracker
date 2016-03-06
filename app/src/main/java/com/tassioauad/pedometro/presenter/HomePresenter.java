@@ -4,20 +4,27 @@ import com.tassioauad.pedometro.model.api.ActivityRecognizer;
 import com.tassioauad.pedometro.model.api.ActivityRecognizerListener;
 import com.tassioauad.pedometro.model.api.LocationCapturer;
 import com.tassioauad.pedometro.model.api.LocationCapturerListener;
+import com.tassioauad.pedometro.model.dao.ActivityLocationDao;
+import com.tassioauad.pedometro.model.entity.ActivityLocation;
 import com.tassioauad.pedometro.model.entity.ActivityType;
 import com.tassioauad.pedometro.model.entity.Location;
 import com.tassioauad.pedometro.view.HomeView;
+
+import java.util.Date;
 
 public class HomePresenter {
 
     private HomeView view;
     private LocationCapturer locationCapturer;
     private ActivityRecognizer activityRecognizer;
+    private ActivityLocationDao activityLocationDao;
+    private ActivityType currentActivityType = ActivityType.DEFAULT;
 
-    public HomePresenter(HomeView view, LocationCapturer locationCapturer, ActivityRecognizer activityRecognizer) {
+    public HomePresenter(HomeView view, LocationCapturer locationCapturer, ActivityRecognizer activityRecognizer, ActivityLocationDao activityLocationDao) {
         this.view = view;
         this.locationCapturer = locationCapturer;
         this.activityRecognizer = activityRecognizer;
+        this.activityLocationDao = activityLocationDao;
     }
 
     public void finish() {
@@ -36,6 +43,11 @@ public class HomePresenter {
             @Override
             public void onLocationCaptured(Location location) {
                 view.showCurrentLocation(location);
+                ActivityLocation activityLocation = new ActivityLocation();
+                activityLocation.setLocation(location);
+                activityLocation.setActivityType(currentActivityType);
+                activityLocation.setDate(new Date());
+                activityLocationDao.insert(activityLocation);
             }
 
         });
@@ -51,6 +63,7 @@ public class HomePresenter {
 
             @Override
             public void onActivityRecognized(ActivityType activityType) {
+                currentActivityType = activityType;
                 view.showCurrentActivity(activityType);
             }
         });
