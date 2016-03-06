@@ -7,15 +7,19 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.tassioauad.pedometro.PedometroApplication;
 import com.tassioauad.pedometro.R;
 import com.tassioauad.pedometro.dagger.HomeViewModule;
-import com.tassioauad.pedometro.model.api.ActivityRecognizerImpl;
-import com.tassioauad.pedometro.model.api.ActivityRecognizerListener;
-import com.tassioauad.pedometro.model.api.LocationCapturerImpl;
-import com.tassioauad.pedometro.model.api.LocationCapturerListener;
 import com.tassioauad.pedometro.model.entity.ActivityType;
 import com.tassioauad.pedometro.model.entity.Location;
 import com.tassioauad.pedometro.presenter.HomePresenter;
@@ -26,22 +30,25 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends AppCompatActivity implements HomeView {
+public class HomeActivity extends AppCompatActivity implements HomeView, OnMapReadyCallback {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     @Inject
     HomePresenter presenter;
-    @Bind(R.id.textview_location)
-    TextView textviewLocation;
-    @Bind(R.id.textview_activity)
-    TextView textviewActivity;
+    private GoogleMap googleMap;
+    private Location currentLocation;
+    private ActivityType currentActivityType = ActivityType.UNKNOWN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         ((PedometroApplication) getApplication()).getObjectGraph().plus(new HomeViewModule(this)).inject(this);
+
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_maps);
+        mapFragment.getMapAsync(this);
 
         //Verifying ACCESS_FINE_LOCATION permission. If negative, requesting the permission.
         int accessFineLocationPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -72,25 +79,70 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         }
     }
 
-
     @Override
     public void warnWasNotPossibleToCaptureLocation(String errorMessage) {
-        textviewLocation.setText(errorMessage);
-
+        Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_LONG);
+        toast.getView().setBackgroundColor(getResources().getColor(R.color.indigo500Alpha));
+        toast.show();
     }
 
     @Override
     public void showCurrentLocation(Location location) {
-        textviewLocation.setText(String.format(getString(R.string.homeactivity_latitudelongitude), location.getLatitude(), location.getLongitude()));
+        this.currentLocation = location;
+        showOnTheMap();
+    }
+
+    public void showOnTheMap() {
+        googleMap.clear();
+        MarkerOptions markerOptions = new MarkerOptions();
+        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        markerOptions.position(latLng);
+        markerOptions.title(currentActivityType.getName());
+        BitmapDescriptor bitmapDescriptor;
+        switch (currentActivityType.getIndex()) {
+                case 0:
+                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_invehicle);
+                    break;
+                case 1:
+                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_bicycle);
+                    break;
+                case 2:
+                case 7:
+                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_walking);
+                    break;
+                case 3:
+                case 5:
+                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_still);
+                    break;
+                case 4:
+                case 6:
+                default:
+                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_unknown);
+                    break;
+                case 8:
+                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_running);
+                    break;
+
+        }
+        markerOptions.icon(bitmapDescriptor);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f));
+        googleMap.addMarker(markerOptions);
     }
 
     @Override
     public void warnWasNotPossibleToRecognizeActivity(String errorMessage) {
-        textviewActivity.setText(errorMessage);
+        Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_LONG);
+        toast.getView().setBackgroundColor(getResources().getColor(R.color.indigo500Alpha));
+        toast.show();
     }
 
     @Override
     public void showCurrentActivity(ActivityType activityType) {
-        textviewActivity.setText(activityType.getName());
+        this.currentActivityType = activityType;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
     }
 }
