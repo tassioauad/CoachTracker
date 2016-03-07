@@ -86,7 +86,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
     }
 
 
-
     @Override
     public void show(Location location, ActivityType activityType) {
         this.currentLocation = location;
@@ -97,29 +96,29 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
         markerOptions.position(latLng);
         markerOptions.title(currentActivityType.getName());
         BitmapDescriptor bitmapDescriptor;
-        switch (currentActivityType.getIndex()) {
-                case 0:
-                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_invehicle);
-                    break;
-                case 1:
-                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_bicycle);
-                    break;
-                case 2:
-                case 7:
-                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_walking);
-                    break;
-                case 3:
-                case 5:
-                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_still);
-                    break;
-                case 4:
-                case 6:
-                default:
-                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_unknown);
-                    break;
-                case 8:
-                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_running);
-                    break;
+        switch (currentActivityType) {
+            case IN_VEHICLE:
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_invehicle);
+                break;
+            case ON_BICYCLE:
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_bicycle);
+                break;
+            case ON_FOOT:
+            case WALKING:
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_walking);
+                break;
+            case STILL:
+            case TILTING:
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_still);
+                break;
+            case UNKNOWN:
+            case DEFAULT:
+            default:
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_unknown);
+                break;
+            case RUNNING:
+                bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_running);
+                break;
         }
         markerOptions.icon(bitmapDescriptor);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f));
