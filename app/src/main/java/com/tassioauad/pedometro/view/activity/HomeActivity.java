@@ -27,7 +27,6 @@ import com.tassioauad.pedometro.view.HomeView;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity implements HomeView, OnMapReadyCallback {
@@ -86,13 +85,12 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
         toast.show();
     }
 
-    @Override
-    public void showCurrentLocation(Location location) {
-        this.currentLocation = location;
-        showOnTheMap();
-    }
 
-    public void showOnTheMap() {
+
+    @Override
+    public void show(Location location, ActivityType activityType) {
+        this.currentLocation = location;
+        this.currentActivityType = activityType;
         googleMap.clear();
         MarkerOptions markerOptions = new MarkerOptions();
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
@@ -122,7 +120,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
                 case 8:
                     bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_running);
                     break;
-
         }
         markerOptions.icon(bitmapDescriptor);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f));
@@ -134,11 +131,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
         Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_LONG);
         toast.getView().setBackgroundColor(getResources().getColor(R.color.indigo500Alpha));
         toast.show();
-    }
-
-    @Override
-    public void showCurrentActivity(ActivityType activityType) {
-        this.currentActivityType = activityType;
     }
 
     @Override

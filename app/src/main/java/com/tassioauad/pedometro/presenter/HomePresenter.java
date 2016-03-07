@@ -42,14 +42,15 @@ public class HomePresenter {
 
             @Override
             public void onLocationCaptured(Location location) {
-                view.showCurrentLocation(location);
-                ActivityLocation activityLocation = new ActivityLocation();
-                activityLocation.setLocation(location);
-                activityLocation.setActivityType(currentActivityType);
-                activityLocation.setDate(new Date());
-                activityLocationDao.insert(activityLocation);
+                if(location != null && currentActivityType != null) {
+                    view.show(location, currentActivityType);
+                    ActivityLocation activityLocation = new ActivityLocation();
+                    activityLocation.setLocation(location);
+                    activityLocation.setActivityType(currentActivityType);
+                    activityLocation.setDate(new Date());
+                    activityLocationDao.insert(activityLocation);
+                }
             }
-
         });
         locationCapturer.startToCaptureLocations();
     }
@@ -64,7 +65,6 @@ public class HomePresenter {
             @Override
             public void onActivityRecognized(ActivityType activityType) {
                 currentActivityType = activityType;
-                view.showCurrentActivity(activityType);
             }
         });
         activityRecognizer.startToRecognizeActivities();
