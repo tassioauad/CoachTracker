@@ -49,7 +49,7 @@ public class ActivityLocationDaoImpl extends Dao implements ActivityLocationDao 
     }
 
     @Override
-    public List<ActivityLocation> listAllByDay(Date currentDay) {
+    public List<ActivityLocation> listAll(Date currentDay) {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(currentDay);
@@ -63,7 +63,21 @@ public class ActivityLocationDaoImpl extends Dao implements ActivityLocationDao 
 
         Cursor cursor = getDatabase().query(TABLE_NAME, COLUMN_ARRAY, COLUMN_DATE + " > ? AND " + COLUMN_DATE + " < ?",
                 new String[]{String.valueOf(currentDay.getTime()), String.valueOf(nextDay.getTime())},
-                null, null, null, null);
+                null, null, COLUMN_DATE + " ASC", null);
+
+        List<ActivityLocation> activityLocationList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            activityLocationList.add(convertCursorToEntity(cursor));
+        }
+        return activityLocationList;
+    }
+
+    @Override
+    public List<ActivityLocation> listAll(Date startDate, Date finalDate) {
+
+        Cursor cursor = getDatabase().query(TABLE_NAME, COLUMN_ARRAY, COLUMN_DATE + " > ? AND " + COLUMN_DATE + " < ?",
+                new String[]{String.valueOf(startDate.getTime()), String.valueOf(finalDate.getTime())},
+                null, null, COLUMN_DATE + " ASC", null);
 
         List<ActivityLocation> activityLocationList = new ArrayList<>();
         while (cursor.moveToNext()) {
