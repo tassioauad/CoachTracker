@@ -12,6 +12,7 @@
         class="com.google.android.gms.maps.SupportMapFragment"/>
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_margin="10dp"
         android:layout_height="wrap_content"
