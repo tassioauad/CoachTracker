@@ -49,12 +49,14 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
 
     @Override
     public void stopToRecognizeActivities() {
-        ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(
-                googleApiClient,
-                PendingIntent.getService(context, 0,
-                        new Intent(context, ActivityRecognitionIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT)
-        ); //Stopping to recognize activities.
-        googleApiClient.disconnect(); //Closing connection with Google APIs
+        if (googleApiClient.isConnected()) {
+            ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(
+                    googleApiClient,
+                    PendingIntent.getService(context, 0,
+                            new Intent(context, ActivityRecognitionIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT)
+            ); //Stopping to recognize activities.
+            googleApiClient.disconnect(); //Closing connection with Google APIs
+        }
     }
 
     /**

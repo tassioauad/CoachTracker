@@ -39,8 +39,10 @@ public class LocationCapturerImpl implements LocationCapturer, GoogleApiClient.C
 
     @Override
     public void stopToCaptureLocations() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this); //Stopping to get location updates
-        googleApiClient.disconnect(); //Closing connection with Google APIs
+        if (googleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this); //Stopping to get location updates
+            googleApiClient.disconnect(); //Closing connection with Google APIs
+        }
     }
 
     /**
