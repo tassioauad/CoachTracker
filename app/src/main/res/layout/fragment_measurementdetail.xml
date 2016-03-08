@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:weightSum="4">
+
+    <TextView
+        android:id="@+id/textview_onfoot"
+        style="@style/TextNormal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/ic_walking"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_walking"
+        android:gravity="center_vertical" />
+
+    <TextView
+        android:id="@+id/textview_running"
+        style="@style/TextNormal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/ic_running"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_running"
+        android:gravity="center_vertical" />
+
+    <TextView
+        android:id="@+id/textview_bicycle"
+        style="@style/TextNormal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/ic_bicycle"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_bicycle"
+        android:gravity="center_vertical" />
+
+    <TextView
+        android:id="@+id/textview_vehicle"
+        style="@style/TextNormal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/ic_invehicle"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_invehicle"
+        android:gravity="center_vertical" />
+
+</LinearLayout>

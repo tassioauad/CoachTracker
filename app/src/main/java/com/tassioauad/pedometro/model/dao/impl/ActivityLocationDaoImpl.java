@@ -49,13 +49,14 @@ public class ActivityLocationDaoImpl extends Dao implements ActivityLocationDao 
     }
 
     @Override
-    public List<ActivityLocation> listAllByDay(Date currentDay) {
+    public List<ActivityLocation> listAll(Date currentDay) {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(currentDay);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.clear(Calendar.HOUR_OF_DAY);
+        calendar.clear(Calendar.MINUTE);
+        calendar.clear(Calendar.SECOND);
+        calendar.clear(Calendar.MILLISECOND);
 
         currentDay = calendar.getTime();
         calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 1);
@@ -63,7 +64,21 @@ public class ActivityLocationDaoImpl extends Dao implements ActivityLocationDao 
 
         Cursor cursor = getDatabase().query(TABLE_NAME, COLUMN_ARRAY, COLUMN_DATE + " > ? AND " + COLUMN_DATE + " < ?",
                 new String[]{String.valueOf(currentDay.getTime()), String.valueOf(nextDay.getTime())},
-                null, null, null, null);
+                null, null, COLUMN_DATE + " ASC", null);
+
+        List<ActivityLocation> activityLocationList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            activityLocationList.add(convertCursorToEntity(cursor));
+        }
+        return activityLocationList;
+    }
+
+    @Override
+    public List<ActivityLocation> listAll(Date startDate, Date finalDate) {
+
+        Cursor cursor = getDatabase().query(TABLE_NAME, COLUMN_ARRAY, COLUMN_DATE + " > ? AND " + COLUMN_DATE + " < ?",
+                new String[]{String.valueOf(startDate.getTime()), String.valueOf(finalDate.getTime())},
+                null, null, COLUMN_DATE + " ASC", null);
 
         List<ActivityLocation> activityLocationList = new ArrayList<>();
         while (cursor.moveToNext()) {

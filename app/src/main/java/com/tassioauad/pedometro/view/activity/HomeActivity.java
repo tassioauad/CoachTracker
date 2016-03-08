@@ -8,6 +8,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,6 +50,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
     LinearLayout linearLayoutWarn;
     @Bind(R.id.textview_warn)
     TextView textViewWarn;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
     private GoogleMap googleMap;
     private Location currentLocation;
     private ActivityType currentActivityType = ActivityType.UNKNOWN;
@@ -58,6 +63,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         ((PedometroApplication) getApplication()).getObjectGraph().plus(new HomeViewModule(this)).inject(this);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_maps);
@@ -86,6 +93,22 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
                 startTracking();
             }
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home_menu, menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.measurement:
+                startActivity(MeasurementActivity.newInstance(this));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void startTracking() {
@@ -182,6 +205,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
     public void warnWasNotPossibleToRecognizeActivity(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
