@@ -7,5 +7,6 @@
     <color name="indigo700">#303F9F</color>
     <color name="indigo500Alpha">#823f51b5</color>
     <color name="pinkA200">#FF4081</color>
+    <color name="gray900">#212121</color>
 
 </resources>

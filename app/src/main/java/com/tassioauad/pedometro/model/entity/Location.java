@@ -32,6 +32,14 @@ public class Location implements Parcelable {
         this.longitude = longitude;
     }
 
+    public android.location.Location getLocation() {
+        android.location.Location location = new android.location.Location("pedometro");
+        location.setLatitude(getLatitude());
+        location.setLongitude(getLongitude());
+
+        return location;
+    }
+
     @Override
     public int describeContents() {
         return 0;
