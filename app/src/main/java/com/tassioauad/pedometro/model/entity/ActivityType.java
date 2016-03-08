@@ -30,7 +30,7 @@ public enum ActivityType {
             case 7:
                 return "Walking";
             case 8:
-                return "Runing";
+                return "Running";
         }
     }
 

@@ -4,5 +4,7 @@
 
     <!--HomeActivity -->
     <string name="homeactivity_latitudelongitude">latitude: %1$f longitude: %2$f</string>
+    <string name="activityhome_warntracking">Tracking…</string>
+    <string name="activityhome_warntrackingpaused">The tracking has been paused</string>
 
 </resources>
