@@ -42,7 +42,7 @@ public class HomePresenter {
 
             @Override
             public void onLocationCaptured(Location location) {
-                if(location != null && currentActivityType != null) {
+                if (location != null && currentActivityType != null) {
                     view.show(location, currentActivityType);
                     ActivityLocation activityLocation = new ActivityLocation();
                     activityLocation.setLocation(location);
@@ -70,4 +70,11 @@ public class HomePresenter {
         activityRecognizer.startToRecognizeActivities();
     }
 
+    public void stopToCaptureLocation() {
+        locationCapturer.stopToCaptureLocations();
+    }
+
+    public void stopToRecognizeActivity() {
+        activityRecognizer.stopToRecognizeActivities();
+    }
 }

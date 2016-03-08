@@ -15,4 +15,11 @@
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
+    <style name="TextWarn">
+        <item name="android:textSize">@dimen/text_warn</item>
+        <item name="android:textColor">@color/pinkA200</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
 </resources>
