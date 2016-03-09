@@ -19,6 +19,7 @@ public class HomePresenter {
     private ActivityRecognizer activityRecognizer;
     private ActivityLocationDao activityLocationDao;
     private ActivityType currentActivityType = ActivityType.DEFAULT;
+    private Location currentLocation;
 
     public HomePresenter(HomeView view, LocationCapturer locationCapturer, ActivityRecognizer activityRecognizer, ActivityLocationDao activityLocationDao) {
         this.view = view;
@@ -42,17 +43,22 @@ public class HomePresenter {
 
             @Override
             public void onLocationCaptured(Location location) {
-                if (location != null && currentActivityType != null) {
-                    view.show(location, currentActivityType);
-                    ActivityLocation activityLocation = new ActivityLocation();
-                    activityLocation.setLocation(location);
-                    activityLocation.setActivityType(currentActivityType);
-                    activityLocation.setDate(new Date());
-                    activityLocationDao.insert(activityLocation);
-                }
+                currentLocation = location;
+                saveActivityLocation();
             }
         });
         locationCapturer.startToCaptureLocations();
+    }
+
+    private void saveActivityLocation() {
+        if (currentLocation != null && currentActivityType != null) {
+            view.show(currentLocation, currentActivityType);
+            ActivityLocation activityLocation = new ActivityLocation();
+            activityLocation.setLocation(currentLocation);
+            activityLocation.setActivityType(currentActivityType);
+            activityLocation.setDate(new Date());
+            activityLocationDao.insert(activityLocation);
+        }
     }
 
     public void startToRecognizeActivity() {
@@ -65,6 +71,7 @@ public class HomePresenter {
             @Override
             public void onActivityRecognized(ActivityType activityType) {
                 currentActivityType = activityType;
+                saveActivityLocation();
             }
         });
         activityRecognizer.startToRecognizeActivities();

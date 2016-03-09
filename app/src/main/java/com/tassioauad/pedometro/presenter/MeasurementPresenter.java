@@ -20,10 +20,10 @@ public class MeasurementPresenter {
 
     public void init() {
         Calendar calendar = Calendar.getInstance();
-        calendar.clear(Calendar.HOUR_OF_DAY);
-        calendar.clear(Calendar.MINUTE);
-        calendar.clear(Calendar.SECOND);
-        calendar.clear(Calendar.MILLISECOND);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
         Date firstDayOfWeek = calendar.getTime();
         calendar.add(Calendar.WEEK_OF_YEAR, 1);
