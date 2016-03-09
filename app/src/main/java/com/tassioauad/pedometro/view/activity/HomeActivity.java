@@ -131,6 +131,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
     }
 
     private void stopTracking() {
+        linearLayoutWarn.setVisibility(View.GONE);
         sharedPreferences.edit().putBoolean(getString(R.string.pedometro_preferences_starttracking), false).apply();
         presenter.stopToCaptureLocation();
         presenter.stopToRecognizeActivity();
