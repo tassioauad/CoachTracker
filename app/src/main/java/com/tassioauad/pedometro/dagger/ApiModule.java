@@ -3,9 +3,9 @@ package com.tassioauad.pedometro.dagger;
 import android.content.Context;
 
 import com.tassioauad.pedometro.model.api.ActivityRecognizer;
-import com.tassioauad.pedometro.model.api.ActivityRecognizerImpl;
+import com.tassioauad.pedometro.model.api.impl.ActivityRecognizerImpl;
 import com.tassioauad.pedometro.model.api.LocationCapturer;
-import com.tassioauad.pedometro.model.api.LocationCapturerImpl;
+import com.tassioauad.pedometro.model.api.impl.LocationCapturerImpl;
 
 import dagger.Module;
 import dagger.Provides;
