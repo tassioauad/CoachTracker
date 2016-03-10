@@ -142,17 +142,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    presenter.startToCaptureLocation();
-                }
-            }
-        }
-    }
-
-    @Override
     public void warnWasNotPossibleToCaptureLocation(String errorMessage) {
         Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_LONG);
         toast.getView().setBackgroundColor(getResources().getColor(R.color.indigo500Alpha));
