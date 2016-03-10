@@ -1,4 +1,4 @@
-package com.tassioauad.pedometro.model.api;
+package com.tassioauad.pedometro.model.api.impl;
 
 import android.content.Context;
 import android.location.Location;
@@ -8,13 +8,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.tassioauad.pedometro.model.api.LocationCapturer;
+import com.tassioauad.pedometro.model.api.LocationCapturerListener;
 
 
 public class LocationCapturerImpl implements LocationCapturer, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private static final long LOCATION_CAPTURING_INTERVAL_INMILIS = 10000;
     private static final long LOCATION_CAPTURING_FASTESTINTERVAL_INMILIS = 5000;
-    private static final long LOCATION_CAPTURING_SMALESTDISPLACEMENT_INMETERS = 100;
+    private static final long LOCATION_CAPTURING_SMALESTDISPLACEMENT_INMETERS = 5;
     private GoogleApiClient googleApiClient;
     private LocationCapturerListener locationCapturerListener;
 

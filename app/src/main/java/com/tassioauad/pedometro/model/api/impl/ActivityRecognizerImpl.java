@@ -1,4 +1,4 @@
-package com.tassioauad.pedometro.model.api;
+package com.tassioauad.pedometro.model.api.impl;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -11,6 +11,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.ActivityRecognitionResult;
+import com.tassioauad.pedometro.model.api.ActivityRecognizer;
+import com.tassioauad.pedometro.model.api.ActivityRecognizerListener;
 import com.tassioauad.pedometro.model.entity.ActivityType;
 
 public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
