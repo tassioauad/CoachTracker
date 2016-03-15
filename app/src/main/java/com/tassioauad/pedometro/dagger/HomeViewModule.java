@@ -20,7 +20,7 @@ public class HomeViewModule {
     }
 
     @Provides
-    public HomePresenter provideHomePresenter(ActivityRecognizer activityRecognizer, LocationCapturer locationCapturer, ActivityLocationDao activityLocationDao) {
-        return new HomePresenter(view, locationCapturer, activityRecognizer, activityLocationDao);
+    public HomePresenter provideHomePresenter() {
+        return new HomePresenter(view);
     }
 }
