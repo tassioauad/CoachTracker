@@ -38,6 +38,9 @@ public class Measurer {
                     currentActivityType = activityLocation.getActivityType();
                 }
             }
+            if(distance != 0) {
+                distancePerActivityType.put(currentActivityType, distancePerActivityType.get(currentActivityType) + distance);
+            }
         }
     }
 
