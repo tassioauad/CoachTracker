@@ -17,6 +17,7 @@ public class LocationCapturerImpl implements LocationCapturer, GoogleApiClient.C
     private static final long LOCATION_CAPTURING_INTERVAL_INMILIS = 10000;
     private static final long LOCATION_CAPTURING_FASTESTINTERVAL_INMILIS = 5000;
     private static final long LOCATION_CAPTURING_SMALESTDISPLACEMENT_INMETERS = 5;
+    private static final float DESIRABLE_ACCURANCY = 50f;
     private GoogleApiClient googleApiClient;
     private LocationCapturerListener locationCapturerListener;
 
@@ -97,7 +98,9 @@ public class LocationCapturerImpl implements LocationCapturer, GoogleApiClient.C
     @Override
     public void onLocationChanged(Location location) {
         //Current location has been catch, warn it!
-        locationCapturerListener.onLocationCaptured(new com.tassioauad.pedometro.model.entity.Location(location));
+        if(location.hasAccuracy() && location.getAccuracy() < DESIRABLE_ACCURANCY) {
+            locationCapturerListener.onLocationCaptured(new com.tassioauad.pedometro.model.entity.Location(location));
+        }
     }
 
 
