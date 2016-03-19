@@ -9,4 +9,8 @@ public interface HomeView {
     void show(Location location, ActivityType activityType);
 
     void warnWasNotPossibleToRecognizeActivity(String errorMessage);
+
+    void warnTracking();
+
+    void warnTrackingHasBeenStopped();
 }

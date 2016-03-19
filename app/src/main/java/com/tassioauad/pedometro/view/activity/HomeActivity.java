@@ -36,6 +36,8 @@ import com.tassioauad.pedometro.R;
 import com.tassioauad.pedometro.dagger.HomeViewModule;
 import com.tassioauad.pedometro.model.entity.ActivityType;
 import com.tassioauad.pedometro.model.entity.Location;
+import com.tassioauad.pedometro.model.service.Tracker;
+import com.tassioauad.pedometro.model.service.TrackerListener;
 import com.tassioauad.pedometro.model.service.TrackingService;
 import com.tassioauad.pedometro.presenter.HomePresenter;
 import com.tassioauad.pedometro.view.HomeView;
@@ -50,10 +52,10 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity implements HomeView, OnMapReadyCallback {
 
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-
     @Inject
     HomePresenter presenter;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
     @Bind(R.id.fab_startstop)
     FloatingActionButton floatingActionButtonStartStop;
     @Bind(R.id.linearlayout_warn)
@@ -64,10 +66,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
     Toolbar toolbar;
     private GoogleMap googleMap;
     private SharedPreferences sharedPreferences;
-    private boolean isTrackingServiceBound;
-    private TrackingService.TrackingServiceBinder trackingServiceBinder;
-    private static final long TIME_INMILIS_UPDATE_MAP = 5000;
-    private TimerTask timerTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,19 +93,20 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
             @Override
             public void onClick(View v) {
                 if (sharedPreferences.getBoolean(getString(R.string.pedometro_preferences_starttracking), false)) {
-                    stopTracking();
+                    presenter.stopTrackingService();
                 } else {
-                    startTracking();
+                    presenter.startTrackingService();
                 }
             }
         });
         if (sharedPreferences.getBoolean(getString(R.string.pedometro_preferences_starttracking), false)) {
             floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
-            Intent intent = new Intent(this, TrackingService.class);
-            bindService(intent, trackingServiceConnection, Context.BIND_AUTO_CREATE);
+            presenter.startTrackingService();
         } else {
             floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
         }
+
+        presenter.init();
     }
 
     @Override
@@ -124,39 +123,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void startTracking() {
-        textViewWarn.setText(getString(R.string.activityhome_warntracking));
-        linearLayoutWarn.setVisibility(View.VISIBLE);
-        sharedPreferences.edit().putBoolean(getString(R.string.pedometro_preferences_starttracking), true).apply();
-        startTrackingService();
-        floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
-    }
-
-    private void startTrackingService() {
-        Intent intent = new Intent(this, TrackingService.class);
-        startService(intent);
-        bindService(intent, trackingServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private void stopTracking() {
-        linearLayoutWarn.setVisibility(View.GONE);
-        sharedPreferences.edit().putBoolean(getString(R.string.pedometro_preferences_starttracking), false).apply();
-        stopTrackingService();
-        floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
-        googleMap.clear();
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0), 0f));
-        Toast.makeText(this, R.string.activityhome_warntrackingpaused, Toast.LENGTH_LONG).show();
-        timerTask.cancel();
-    }
-
-    private void stopTrackingService() {
-        if (isTrackingServiceBound) {
-            stopService(new Intent(this, TrackingService.class));
-            unbindService(trackingServiceConnection);
-            isTrackingServiceBound = false;
-        }
     }
 
     @Override
@@ -210,42 +176,27 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
     }
 
     @Override
+    public void warnTracking() {
+        textViewWarn.setText(getString(R.string.activityhome_warntracking));
+        linearLayoutWarn.setVisibility(View.VISIBLE);
+        sharedPreferences.edit().putBoolean(getString(R.string.pedometro_preferences_starttracking), true).apply();
+        floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
+    }
+
+    @Override
+    public void warnTrackingHasBeenStopped() {
+        linearLayoutWarn.setVisibility(View.GONE);
+        sharedPreferences.edit().putBoolean(getString(R.string.pedometro_preferences_starttracking), false).apply();
+        floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
+        googleMap.clear();
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0), 0f));
+        Toast.makeText(this, R.string.activityhome_warntrackingpaused, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
     }
-
-    private ServiceConnection trackingServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            isTrackingServiceBound = false;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            trackingServiceBinder = (TrackingService.TrackingServiceBinder) service;
-            isTrackingServiceBound = true;
-            if (trackingServiceBinder.getActivityType() != null && trackingServiceBinder.getLocation() != null) {
-                show(trackingServiceBinder.getLocation(), trackingServiceBinder.getActivityType());
-            } else {
-                linearLayoutWarn.setVisibility(View.VISIBLE);
-            }
-            timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    new Handler(getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (trackingServiceBinder.getActivityType() != null && trackingServiceBinder.getLocation() != null) {
-                                show(trackingServiceBinder.getLocation(), trackingServiceBinder.getActivityType());
-                            }
-                        }
-                    });
-                }
-            };
-            new Timer().schedule(timerTask, TIME_INMILIS_UPDATE_MAP, TIME_INMILIS_UPDATE_MAP);
-        }
-    };
 
 }
 
