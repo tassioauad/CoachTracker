@@ -8,5 +8,6 @@
     <color name="indigo500Alpha">#823f51b5</color>
     <color name="pinkA200">#FF4081</color>
     <color name="gray900">#212121</color>
+    <color name="gray500">#9E9E9E</color>
 
 </resources>

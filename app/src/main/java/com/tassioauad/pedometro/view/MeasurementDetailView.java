@@ -2,12 +2,11 @@ package com.tassioauad.pedometro.view;
 
 public interface MeasurementDetailView {
 
-    void showTravelledDistanceInVehicle(long distance);
+    void showInVehicleDetails(long distance, long timeInMilis);
 
-    void showTravelledDistanceOnBicycle(long distance);
+    void showOnBicycleDetails(long distance, long time);
 
-    void showTravelledDistanceOnFoot(long distance);
+    void showOnFootDetails(long distance, long timeInMilis);
 
-    void showTravelledDistanceRunning(long distance);
-
+    void showRunningDetails(long distance, long timeInMilis);
 }

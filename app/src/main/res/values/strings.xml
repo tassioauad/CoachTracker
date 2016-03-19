@@ -15,5 +15,7 @@
     <string name="measurementactivity_week">Week</string>
 
     <!--MeasurementDetailFragment-->
-    <string name="measurementdetailfragment_measure">%1$.2f Km</string>
+    <string name="measurementdetailfragment_measuredistance">Distance: %1$.2f Km</string>
+    <string name="measurementdetailfragment_measuretime">Time: %1$.2f Hours</string>
+    <string name="measurementdetailfragment_measureaveragespeed">Average Speed: %1$.2f km/h</string>
 </resources>
