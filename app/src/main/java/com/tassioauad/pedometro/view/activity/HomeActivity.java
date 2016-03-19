@@ -2,9 +2,15 @@ package com.tassioauad.pedometro.view.activity;
 
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -30,8 +36,14 @@ import com.tassioauad.pedometro.R;
 import com.tassioauad.pedometro.dagger.HomeViewModule;
 import com.tassioauad.pedometro.model.entity.ActivityType;
 import com.tassioauad.pedometro.model.entity.Location;
+import com.tassioauad.pedometro.model.service.Tracker;
+import com.tassioauad.pedometro.model.service.TrackerListener;
+import com.tassioauad.pedometro.model.service.TrackingService;
 import com.tassioauad.pedometro.presenter.HomePresenter;
 import com.tassioauad.pedometro.view.HomeView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -40,10 +52,10 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity implements HomeView, OnMapReadyCallback {
 
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-
     @Inject
     HomePresenter presenter;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
     @Bind(R.id.fab_startstop)
     FloatingActionButton floatingActionButtonStartStop;
     @Bind(R.id.linearlayout_warn)
@@ -53,8 +65,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     private GoogleMap googleMap;
-    private Location currentLocation;
-    private ActivityType currentActivityType = ActivityType.UNKNOWN;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -83,26 +93,20 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
             @Override
             public void onClick(View v) {
                 if (sharedPreferences.getBoolean(getString(R.string.pedometro_preferences_starttracking), false)) {
-                    stopTracking();
+                    presenter.stopTrackingService();
                 } else {
-                    startTracking();
+                    presenter.startTrackingService();
                 }
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         if (sharedPreferences.getBoolean(getString(R.string.pedometro_preferences_starttracking), false)) {
-            startTracking();
+            floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
+            presenter.startTrackingService();
+        } else {
+            floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
         }
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        presenter.finish();
+        presenter.init();
     }
 
     @Override
@@ -121,26 +125,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
         return super.onOptionsItemSelected(item);
     }
 
-    private void startTracking() {
-        textViewWarn.setText(getString(R.string.activityhome_warntracking));
-        linearLayoutWarn.setVisibility(View.VISIBLE);
-        sharedPreferences.edit().putBoolean(getString(R.string.pedometro_preferences_starttracking), true).apply();
-        presenter.startToCaptureLocation();
-        presenter.startToRecognizeActivity();
-        floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
-    }
-
-    private void stopTracking() {
-        linearLayoutWarn.setVisibility(View.GONE);
-        sharedPreferences.edit().putBoolean(getString(R.string.pedometro_preferences_starttracking), false).apply();
-        presenter.stopToCaptureLocation();
-        presenter.stopToRecognizeActivity();
-        floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
-        googleMap.clear();
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0), 0f));
-        Toast.makeText(this, R.string.activityhome_warntrackingpaused, Toast.LENGTH_LONG).show();
-    }
-
     @Override
     public void warnWasNotPossibleToCaptureLocation(String errorMessage) {
         Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_LONG);
@@ -151,15 +135,13 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
     @Override
     public void show(Location location, ActivityType activityType) {
         linearLayoutWarn.setVisibility(View.GONE);
-        this.currentLocation = location;
-        this.currentActivityType = activityType;
         googleMap.clear();
         MarkerOptions markerOptions = new MarkerOptions();
-        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         markerOptions.position(latLng);
-        markerOptions.title(currentActivityType.getName());
+        markerOptions.title(activityType.getName());
         BitmapDescriptor bitmapDescriptor;
-        switch (currentActivityType) {
+        switch (activityType) {
             case IN_VEHICLE:
                 bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_invehicle);
                 break;
@@ -193,9 +175,28 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void warnTracking() {
+        textViewWarn.setText(getString(R.string.activityhome_warntracking));
+        linearLayoutWarn.setVisibility(View.VISIBLE);
+        sharedPreferences.edit().putBoolean(getString(R.string.pedometro_preferences_starttracking), true).apply();
+        floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
+    }
+
+    @Override
+    public void warnTrackingHasBeenStopped() {
+        linearLayoutWarn.setVisibility(View.GONE);
+        sharedPreferences.edit().putBoolean(getString(R.string.pedometro_preferences_starttracking), false).apply();
+        floatingActionButtonStartStop.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
+        googleMap.clear();
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0), 0f));
+        Toast.makeText(this, R.string.activityhome_warntrackingpaused, Toast.LENGTH_LONG).show();
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
     }
+
 }
+

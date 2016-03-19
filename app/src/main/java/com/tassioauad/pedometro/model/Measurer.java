@@ -31,12 +31,17 @@ public class Measurer {
                 ActivityLocation activityLocation = activityLocationList.get(i);
                 if(currentActivityType == activityLocation.getActivityType()) {
                     distance += currentLocation.distanceTo(activityLocation.getLocation().getLocation());
+                    currentLocation = activityLocation.getLocation().getLocation();
+                    currentActivityType = activityLocation.getActivityType();
                 } else {
                     distancePerActivityType.put(currentActivityType, distancePerActivityType.get(currentActivityType) + distance);
                     distance = 0;
                     currentLocation = activityLocation.getLocation().getLocation();
                     currentActivityType = activityLocation.getActivityType();
                 }
+            }
+            if(distance != 0) {
+                distancePerActivityType.put(currentActivityType, distancePerActivityType.get(currentActivityType) + distance);
             }
         }
     }

@@ -1,8 +1,6 @@
 package com.tassioauad.pedometro.dagger;
 
-import com.tassioauad.pedometro.model.api.ActivityRecognizer;
-import com.tassioauad.pedometro.model.api.LocationCapturer;
-import com.tassioauad.pedometro.model.dao.ActivityLocationDao;
+import com.tassioauad.pedometro.model.service.Tracker;
 import com.tassioauad.pedometro.presenter.HomePresenter;
 import com.tassioauad.pedometro.view.HomeView;
 import com.tassioauad.pedometro.view.activity.HomeActivity;
@@ -20,7 +18,7 @@ public class HomeViewModule {
     }
 
     @Provides
-    public HomePresenter provideHomePresenter(ActivityRecognizer activityRecognizer, LocationCapturer locationCapturer, ActivityLocationDao activityLocationDao) {
-        return new HomePresenter(view, locationCapturer, activityRecognizer, activityLocationDao);
+    public HomePresenter provideHomePresenter(Tracker tracker) {
+        return new HomePresenter(view, tracker);
     }
 }
