@@ -1,11 +1,37 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/indigo500</item>
+        <item name="colorPrimaryDark">@color/indigo700</item>
+        <item name="colorAccent">@color/pinkA200</item>
+    </style>
+
+    <style name="TextH1">
+        <item name="android:textSize">@dimen/text_h1</item>
+        <item name="android:textColor">@color/indigo500</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <style name="TextH1White">
+        <item name="android:textSize">@dimen/text_h1</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <style name="TextWarn">
+        <item name="android:textSize">@dimen/text_warn</item>
+        <item name="android:textColor">@color/pinkA200</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="TextNormal">
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:textColor">@color/gray900</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
 </resources>
