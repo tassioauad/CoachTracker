@@ -9,17 +9,11 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
+        android:background="?attr/colorPrimary"
         android:elevation="8dp">
 
         <TextView
-            style="@style/TextH1"
+            style="@style/TextH1White"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/measurementactivity_title" />
@@ -38,7 +32,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/indigo700"
+            android:textColor="@color/gray900"
             android:textStyle="bold" />
 
     </android.support.v4.view.ViewPager>

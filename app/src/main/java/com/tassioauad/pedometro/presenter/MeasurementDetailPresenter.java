@@ -17,9 +17,10 @@ public class MeasurementDetailPresenter {
 
     public void init(List<ActivityLocation> activityLocationList) {
         Measurer measurer = new Measurer(activityLocationList);
-        view.showTravelledDistanceInVehicle(measurer.getDistance(ActivityType.IN_VEHICLE));
-        view.showTravelledDistanceOnBicycle(measurer.getDistance(ActivityType.ON_BICYCLE));
-        view.showTravelledDistanceOnFoot(measurer.getDistance(ActivityType.ON_FOOT) + measurer.getDistance(ActivityType.WALKING));
-        view.showTravelledDistanceRunning(measurer.getDistance(ActivityType.RUNNING));
+        view.showInVehicleDetails(measurer.getDistance(ActivityType.IN_VEHICLE), measurer.getTime(ActivityType.IN_VEHICLE));
+        view.showOnBicycleDetails(measurer.getDistance(ActivityType.ON_BICYCLE), measurer.getTime(ActivityType.ON_BICYCLE));
+        view.showOnFootDetails(measurer.getDistance(ActivityType.ON_FOOT) + measurer.getDistance(ActivityType.WALKING),
+                measurer.getTime(ActivityType.ON_FOOT) + measurer.getTime(ActivityType.WALKING));
+        view.showRunningDetails(measurer.getDistance(ActivityType.RUNNING), measurer.getTime(ActivityType.RUNNING));
     }
 }
