@@ -13,8 +13,9 @@
 * ButterKnife
 
 ### Google APIs
-* Location API
-* Activity Recognition API
+* Location
+* Activity Recognition
+* Google Maps
 
 ### Others
 * Android Suport Design Library
