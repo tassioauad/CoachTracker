@@ -26,16 +26,30 @@ public class HomePresenter {
                 }
             }
         });
+        if (tracker.isTracking()) {
+            view.showStopButton();
+            startTrackingService();
+        } else {
+            view.showPlayButton();
+        }
     }
 
 
-    public void startTrackingService() {
+    private void startTrackingService() {
         view.warnTracking();
         tracker.startTrackingService();
     }
 
-    public void stopTrackingService() {
+    private void stopTrackingService() {
         tracker.stopTrackingService();
         view.warnTrackingHasBeenStopped();
+    }
+
+    public void callTrackingService() {
+        if (tracker.isTracking()) {
+            stopTrackingService();
+        } else {
+            startTrackingService();
+        }
     }
 }

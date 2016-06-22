@@ -19,6 +19,6 @@ public class HomeViewModule {
 
     @Provides
     public HomePresenter provideHomePresenter(Tracker tracker) {
-        return new HomePresenter(view, tracker);
+        return new HomePresenter(view, tracker, preferenceDao);
     }
 }

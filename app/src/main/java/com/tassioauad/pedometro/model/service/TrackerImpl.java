@@ -4,15 +4,21 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
+
+import com.tassioauad.pedometro.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class TrackerImpl implements Tracker{
 
     private Context context;
+    private SharedPreferences sharedPreferences;
     private boolean isTrackingServiceBound;
     private TrackingService.TrackingServiceBinder trackingServiceBinder;
     private TrackerListener trackerListener;
@@ -21,6 +27,7 @@ public class TrackerImpl implements Tracker{
 
     public TrackerImpl(Context context) {
         this.context = context;
+        sharedPreferences =  context.getSharedPreferences(context.getString(R.string.pedometro_preferences), MODE_PRIVATE);
     }
 
     @Override
@@ -35,6 +42,7 @@ public class TrackerImpl implements Tracker{
 
     @Override
     public void stopTrackingService() {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.pedometro_preferences_starttracking), false).apply();
         if (isTrackingServiceBound) {
             context.stopService(new Intent(context, TrackingService.class));
             context.unbindService(trackingServiceConnection);
@@ -45,12 +53,18 @@ public class TrackerImpl implements Tracker{
 
     @Override
     public void startTrackingService() {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.pedometro_preferences_starttracking), true).apply();
         Intent intent = new Intent(context, TrackingService.class);
         context.startService(intent);
         context.bindService(intent, trackingServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public ServiceConnection trackingServiceConnection = new ServiceConnection() {
+    @Override
+    public boolean isTracking() {
+        return sharedPreferences.getBoolean(context.getString(R.string.pedometro_preferences_starttracking), false);
+    }
+
+    private ServiceConnection trackingServiceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
