@@ -93,7 +93,7 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
 
     @Override
     public void setActivityRecognizerListener(ActivityRecognizerListener activityRecognizerListener) {
-        this.activityRecognizerListener = activityRecognizerListener;
+        ActivityRecognizerImpl.activityRecognizerListener = activityRecognizerListener;
     }
 
     public static class ActivityRecognitionIntentService extends IntentService {

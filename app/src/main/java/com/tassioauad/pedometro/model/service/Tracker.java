@@ -8,4 +8,6 @@ public interface Tracker {
     void setUpdateTimeInMilis(long updateTimeInMilis);
 
     void setTrackerListener(TrackerListener trackerListener);
+
+    boolean isTracking();
 }
