@@ -13,4 +13,8 @@ public interface HomeView {
     void warnTracking();
 
     void warnTrackingHasBeenStopped();
+
+    void showStopButton();
+
+    void showPlayButton();
 }

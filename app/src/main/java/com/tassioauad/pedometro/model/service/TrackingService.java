@@ -87,13 +87,13 @@ public class TrackingService extends Service {
         super.onDestroy();
     }
 
-    public static class TrackingServiceBinder extends Binder {
+    static class TrackingServiceBinder extends Binder {
 
-        public Location getLocation() {
+        Location getLocation() {
             return currentLocation;
         }
 
-        public ActivityType getActivityType() {
+        ActivityType getActivityType() {
             return currentActivityType;
         }
     }
