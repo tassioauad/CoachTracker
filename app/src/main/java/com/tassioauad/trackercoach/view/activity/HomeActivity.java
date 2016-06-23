@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.tassioauad.trackercoach.PedometroApplication;
+import com.tassioauad.trackercoach.TrackerCoachApplication;
 import com.tassioauad.trackercoach.R;
 import com.tassioauad.trackercoach.dagger.HomeViewModule;
 import com.tassioauad.trackercoach.model.entity.ActivityType;
@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, OnMapRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        ((PedometroApplication) getApplication()).getObjectGraph().plus(new HomeViewModule(this)).inject(this);
+        ((TrackerCoachApplication) getApplication()).getObjectGraph().plus(new HomeViewModule(this)).inject(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 

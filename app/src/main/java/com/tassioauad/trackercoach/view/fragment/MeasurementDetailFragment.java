@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tassioauad.trackercoach.PedometroApplication;
+import com.tassioauad.trackercoach.TrackerCoachApplication;
 import com.tassioauad.trackercoach.R;
 import com.tassioauad.trackercoach.dagger.MeasurementDetailViewModule;
 import com.tassioauad.trackercoach.model.entity.ActivityLocation;
@@ -58,7 +58,7 @@ public class MeasurementDetailFragment extends Fragment implements MeasurementDe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_measurementdetail, container, false);
-        ((PedometroApplication) getActivity().getApplication()).getObjectGraph()
+        ((TrackerCoachApplication) getActivity().getApplication()).getObjectGraph()
                 .plus(new MeasurementDetailViewModule(this)).inject(this);
         ButterKnife.bind(this, view);
 

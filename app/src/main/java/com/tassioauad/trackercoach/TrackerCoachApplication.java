@@ -8,7 +8,7 @@ import com.tassioauad.trackercoach.dagger.DaoModule;
 
 import dagger.ObjectGraph;
 
-public class PedometroApplication extends Application {
+public class TrackerCoachApplication extends Application {
 
     private ObjectGraph objectGraph;
 
@@ -18,7 +18,7 @@ public class PedometroApplication extends Application {
 
         objectGraph = ObjectGraph.create(
                 new Object[]{
-                        new AppModule(PedometroApplication.this),
+                        new AppModule(TrackerCoachApplication.this),
                         new ApiModule(),
                         new DaoModule()
                 }

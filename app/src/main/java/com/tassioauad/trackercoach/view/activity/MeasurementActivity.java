@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.tassioauad.trackercoach.PedometroApplication;
+import com.tassioauad.trackercoach.TrackerCoachApplication;
 import com.tassioauad.trackercoach.R;
 import com.tassioauad.trackercoach.dagger.MeasurementViewModule;
 import com.tassioauad.trackercoach.model.entity.ActivityLocation;
@@ -38,7 +38,7 @@ public class MeasurementActivity extends AppCompatActivity implements Measuremen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_measurement);
-        ((PedometroApplication) getApplication()).getObjectGraph().plus(new MeasurementViewModule(this)).inject(this);
+        ((TrackerCoachApplication) getApplication()).getObjectGraph().plus(new MeasurementViewModule(this)).inject(this);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
