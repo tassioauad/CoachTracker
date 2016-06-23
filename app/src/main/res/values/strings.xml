@@ -1,6 +1,6 @@
 <resources>
     <!-- General -->
-    <string name="app_name">Pedometro</string>
+    <string name="app_name">Tracker Coach</string>
     <string name="pedometro_preferences">pedometro_preferences</string>
     <string name="pedometro_preferences_starttracking">pedometro_preferences_starttracking</string>
 
