@@ -1,13 +1,38 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tassioauad.pedometro">
+    package="com.tassioauad.trackercoach">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
+        android:name="com.tassioauad.trackercoach.TrackerCoachApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAUvpvX5j2KDe3OqSJscGJDpPVq21yD99o" />
+
+        <activity android:name="com.tassioauad.trackercoach.view.activity.HomeActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.tassioauad.trackercoach.view.activity.MeasurementActivity" />
+
+        <service android:name="com.tassioauad.trackercoach.model.api.impl.ActivityRecognizerImpl$ActivityRecognitionIntentService" />
+        <service android:name="com.tassioauad.trackercoach.model.service.TrackingService" />
+
+        <receiver android:name="com.tassioauad.trackercoach.model.service.OnBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">pedometro</string>
+    <!-- General -->
+    <string name="app_name">Tracker Coach</string>
+    <string name="pedometro_preferences">pedometro_preferences</string>
+    <string name="pedometro_preferences_starttracking">pedometro_preferences_starttracking</string>
+
+    <!--HomeActivity -->
+    <string name="activityhome_latitudelongitude">latitude: %1$f longitude: %2$f</string>
+    <string name="activityhome_warntracking">Tracking…</string>
+    <string name="activityhome_warntrackingpaused">The tracking has been paused</string>
+
+    <!--MeasurementActivity-->
+    <string name="measurementactivity_title">Measurements</string>
+    <string name="measurementactivity_today">Today</string>
+    <string name="measurementactivity_week">Week</string>
+
+    <!--MeasurementDetailFragment-->
+    <string name="measurementdetailfragment_measuredistance">Distance: %1$.2f Km</string>
+    <string name="measurementdetailfragment_measuretime">Time: %1$.2f Hours</string>
+    <string name="measurementdetailfragment_measureaveragespeed">Average Speed: %1$.2f km/h</string>
 </resources>
